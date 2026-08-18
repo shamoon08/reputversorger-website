@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reputversorger — Ihre Online-Reputation, neu geschrieben</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF0EB;
+    --paper-alt:#E4E7DE;
+    --ink:#17222B;
+    --ink-soft:#3A4750;
+    --brass:#BB8A46;
+    --brass-dark:#8F6A34;
+    --teal:#24605C;
+    --clay:#9C4A34;
+    --line: rgba(23,34,43,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Manrope', sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--brass-dark);
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  a{color:inherit;}
+
+  /* NAV */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(238,240,235,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:74px;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces', serif; font-weight:600; font-size:19px;
+  }
+  .logo-mark{
+    width:30px; height:30px; border-radius:7px;
+    background:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--paper); font-family:'JetBrains Mono',monospace; font-size:14px;
+  }
+  .nav-links{display:flex; align-items:center; gap:36px; font-size:14.5px; font-weight:500;}
+  .nav-links a{text-decoration:none; opacity:0.8;}
+  .nav-links a:hover{opacity:1;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 22px; border-radius:999px;
+    font-weight:600; font-size:14.5px; text-decoration:none;
+    border:1px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-primary:hover{background:var(--ink-soft);}
+  .btn-ghost{border-color:var(--ink); color:var(--ink); background:transparent;}
+  .btn-ghost:hover{background:var(--ink); color:var(--paper);}
+
+  /* HERO */
+  .hero{padding:88px 0 64px;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:64px; align-items:center;}
+  .hero h1{font-size:clamp(34px,4.4vw,54px); line-height:1.08; margin-top:14px;}
+  .hero h1 em{font-style:italic; color:var(--teal);}
+  .hero p.lede{font-size:17.5px; color:var(--ink-soft); max-width:46ch; margin-top:18px;}
+  .hero-cta{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
+  .hero-note{margin-top:20px; font-size:13px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace;}
+
+  /* SIGNATURE: search result flip card */
+  .browser-card{
+    background:#fff; border-radius:14px; border:1px solid var(--line);
+    box-shadow:0 20px 40px -20px rgba(23,34,43,0.25);
+    overflow:hidden;
+  }
+  .browser-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px; background:var(--paper-alt); border-bottom:1px solid var(--line);
+  }
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--line);}
+  .browser-search{
+    flex:1; margin-left:8px; background:#fff; border-radius:999px;
+    padding:6px 14px; font-size:12.5px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace;
+    border:1px solid var(--line);
+  }
+  .result-stage{position:relative; padding:26px 22px 30px; min-height:230px;}
+  .result{
+    position:absolute; inset:26px 22px 30px;
+    transition:opacity 0.9s ease, transform 0.9s ease;
+  }
+  .result-title{font-size:16px; margin-bottom:4px; text-decoration:underline;}
+  .result-url{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-soft); margin-bottom:10px;}
+  .result-snippet{font-size:13.5px; color:var(--ink-soft);}
+  .result-bad .result-title{color:var(--clay);}
+  .result-bad .result-url{color:var(--clay);}
+  .result-good .result-title{color:var(--teal);}
+  .result-good .result-url{color:var(--teal);}
+  .stars{font-size:13px; letter-spacing:2px; margin-bottom:8px;}
+  .stars-bad{color:var(--clay);}
+  .stars-good{color:var(--brass-dark);}
+  .result-bad{opacity:1; transform:translateY(0);}
+  .result-good{opacity:0; transform:translateY(8px);}
+  .flip .result-bad{opacity:0; transform:translateY(-8px);}
+  .flip .result-good{opacity:1; transform:translateY(0);}
+  .stage-label{
+    text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:var(--ink-soft); padding-bottom:16px; letter-spacing:0.05em; text-transform:uppercase;
+  }
+
+  /* STATS STRIP */
+  .stats{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:34px 0;}
+  .stats-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; text-align:center;}
+  .stat-num{font-family:'JetBrains Mono',monospace; font-size:30px; color:var(--ink); font-weight:500;}
+  .stat-label{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+
+  /* SERVICES */
+  .section{padding:96px 0;}
+  .section-head{max-width:60ch; margin-bottom:52px;}
+  .section-head h2{font-size:clamp(26px,3vw,36px); margin-top:10px;}
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:26px;}
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:30px 26px; display:flex; flex-direction:column; gap:14px;
+  }
+  .card-icon{
+    width:42px; height:42px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:#fff;
+  }
+  .card h3{font-size:19px;}
+  .card p{font-size:14.5px; color:var(--ink-soft); margin:0;}
+
+  /* PROCESS */
+  .process{background:var(--paper-alt);}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative;}
+  .step{padding:0 20px 0 0; position:relative;}
+  .step-num{
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--brass-dark);
+    border-bottom:2px solid var(--brass); display:inline-block; padding-bottom:6px; margin-bottom:16px;
+  }
+  .step h3{font-size:17px; margin-bottom:8px;}
+  .step p{font-size:13.5px; color:var(--ink-soft); margin:0;}
+
+  /* CONTACT */
+  .contact{background:var(--ink); color:var(--paper);}
+  .contact .eyebrow{color:var(--brass);}
+  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;}
+  .contact h2{color:var(--paper); font-size:clamp(26px,3vw,34px); margin-top:10px;}
+  .contact p.lede{color:rgba(238,240,235,0.72); max-width:42ch; margin-top:14px; font-size:15.5px;}
+  .contact-info{margin-top:28px; font-size:14px; color:rgba(238,240,235,0.72);}
+  .contact-info div{margin-bottom:8px;}
+  form{display:flex; flex-direction:column; gap:14px;}
+  input, textarea{
+    background:rgba(238,240,235,0.06);
+    border:1px solid rgba(238,240,235,0.22);
+    border-radius:8px; padding:13px 14px; color:var(--paper);
+    font-family:'Manrope', sans-serif; font-size:14.5px;
+  }
+  input::placeholder, textarea::placeholder{color:rgba(238,240,235,0.45);}
+  textarea{min-height:100px; resize:vertical;}
+  form .btn-primary{background:var(--brass); color:var(--ink); align-self:flex-start; border:none;}
+  form .btn-primary:hover{background:#cf9c56;}
+  .form-note{font-size:12.5px; color:rgba(238,240,235,0.5); font-family:'JetBrains Mono',monospace;}
+
+  footer{padding:34px 0; border-top:1px solid var(--line);}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--ink-soft); flex-wrap:wrap; gap:12px;}
+
+  @media (max-width:860px){
+    .hero-grid, .contact-grid{grid-template-columns:1fr;}
+    .cards{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr 1fr; row-gap:28px;}
+    .stats-grid{grid-template-columns:1fr; gap:20px;}
+    .nav-links{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .result{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo"><span class="logo-mark">R↑</span> reputversorger</div>
+    <div class="nav-links">
+      <a href="#leistungen">Leistungen</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <a href="#kontakt" class="btn btn-primary">Kostenlose Analyse</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Online-Reputationsmanagement</span>
+      <h1>Was Google über Sie sagt, <em>schreiben wir neu.</em></h1>
+      <p class="lede">Wir überwachen, was im Netz über Ihr Unternehmen kursiert, entkräften unfaire Bewertungen und sorgen dafür, dass die erste Suchseite wieder für Sie arbeitet.</p>
+      <div class="hero-cta">
+        <a href="#kontakt" class="btn btn-primary">Kostenlose Analyse anfragen</a>
+        <a href="#leistungen" class="btn btn-ghost">Leistungen ansehen</a>
+      </div>
+      <div class="hero-note">Testseite — Inhalte &amp; Design zur Vorschau</div>
+    </div>
+
+    <div class="browser-card">
+      <div class="browser-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <div class="browser-search">google.com/search?q=ihre+firma</div>
+      </div>
+      <div class="result-stage" id="flip-stage">
+        <div class="stage-label">vorher → nachher</div>
+        <div class="result result-bad">
+          <div class="stars stars-bad">★★☆☆☆ · 47 Bewertungen</div>
+          <div class="result-title">Ihre Firma — Erfahrungen &amp; Beschwerden</div>
+          <div class="result-url">forum-bewertungen.de › ihre-firma</div>
+          <div class="result-snippet">Mehrere Nutzer berichten von langen Wartezeiten und schlechtem Service …</div>
+        </div>
+        <div class="result result-good">
+          <div class="stars stars-good">★★★★★ · 312 Bewertungen</div>
+          <div class="result-title">Ihre Firma — Offizielle Seite</div>
+          <div class="result-url">ihrefirma.de</div>
+          <div class="result-snippet">Ausgezeichneter Kundenservice, geprüfte Bewertungen und transparente Preise …</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div><div class="stat-num">92%</div><div class="stat-label">negative Treffer von Seite 1 entfernt</div></div>
+    <div><div class="stat-num">4–8</div><div class="stat-label">Wochen bis zur sichtbaren Veränderung</div></div>
+    <div><div class="stat-num">210+</div><div class="stat-label">betreute Unternehmen in DACH</div></div>
+  </div>
+</section>
+
+<section class="section" id="leistungen">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Leistungen</span>
+      <h2>Drei Hebel für Ihre Sichtbarkeit</h2>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon" style="background:var(--teal);">01</div>
+        <h3>Online-Monitoring</h3>
+        <p>Wir behalten Erwähnungen, Bewertungen und Suchergebnisse rund um Ihre Marke im Blick — bevor ein Problem eskaliert.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--brass-dark);">02</div>
+        <h3>Bewertungsmanagement</h3>
+        <p>Wir moderieren unfaire Bewertungen, holen echte positive Stimmen ein und reagieren professionell auf Kritik.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--clay);">03</div>
+        <h3>Sichtbarkeit &amp; SEO</h3>
+        <p>Wir stärken die Inhalte, die Sie zeigen wollen, damit sie unfaire oder veraltete Treffer auf Seite 1 verdrängen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section process" id="ablauf">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Ablauf</span>
+      <h2>So arbeiten wir mit Ihnen</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>Analyse</h3>
+        <p>Wir prüfen, was aktuell über Sie zu finden ist — Suchergebnisse, Portale, soziale Netzwerke.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>Strategie</h3>
+        <p>Sie erhalten einen klaren Plan: was entfernt, entkräftet oder verdrängt werden soll.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>Umsetzung</h3>
+        <p>Wir setzen Maßnahmen um — von Moderation bis Content — und stimmen uns eng mit Ihnen ab.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h3>Kontrolle</h3>
+        <p>Laufendes Monitoring zeigt, wie sich Ihre Sichtbarkeit über Zeit entwickelt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section contact" id="kontakt">
+  <div class="wrap contact-grid">
+    <div>
+      <span class="eyebrow">Kontakt</span>
+      <h2>Lassen Sie uns Ihre Analyse starten</h2>
+      <p class="lede">Schildern Sie kurz Ihre Situation. Wir melden uns innerhalb eines Werktags mit einer ersten Einschätzung.</p>
+      <div class="contact-info">
+        <div>hallo@reputversorger.de</div>
+        <div>+49 30 000 000</div>
+        <div>Berlin, Deutschland</div>
+      </div>
+    </div>
+    <form id="contact-form">
+      <input type="text" placeholder="Ihr Name" required>
+      <input type="email" placeholder="ihre@email.de" required>
+      <input type="text" placeholder="Unternehmen">
+      <textarea placeholder="Kurz zu Ihrer Situation …"></textarea>
+      <button type="submit" class="btn btn-primary">Analyse anfragen</button>
+      <div class="form-note" id="form-note">Testformular — es wird nichts versendet.</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div>© 2026 reputversorger — Testseite</div>
+    <div>Impressum · Datenschutz</div>
+  </div>
+</footer>
+
+<script>
+  var stage = document.getElementById('flip-stage');
+  setInterval(function(){
+    stage.classList.toggle('flip');
+  }, 3200);
+
+  var form = document.getElementById('contact-form');
+  var note = document.getElementById('form-note');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    note.textContent = 'Danke — dies ist eine Testseite, es wurde nichts versendet.';
+  });
+</script>
+
+</body>
+</html>
